@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>LUMEN — Local AI</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--side:#0e1629;--panel:#141f34;--panel2:#1b2a43;--line:#2a3b56;--text:#edf3ff;--muted:#91a1ba;--blue:#68a8ff;--mint:#4addbf;--red:#ff7e88}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden}body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif}button,textarea{font:inherit}button{color:inherit;cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}.app{display:grid;grid-template-columns:260px minmax(0,1fr);width:100%;height:100dvh;overflow:hidden}
+.sidebar{display:flex;flex-direction:column;min-width:0;padding:20px 14px;background:var(--side);border-right:1px solid var(--line);z-index:20}.brand{display:flex;align-items:center;gap:11px;padding:5px 7px 25px}.logo{display:grid;grid-template-columns:repeat(2,9px);gap:3px;transform:rotate(-8deg)}.logo i{width:9px;height:9px;border-radius:3px;background:var(--mint)}.logo i:nth-child(2){background:var(--blue)}.logo i:nth-child(3){background:#7888ff}.logo i:nth-child(4){background:#d9f5ff}.brand-name{font-size:19px;font-weight:850;letter-spacing:2.4px}.brand-sub{margin-top:3px;color:var(--muted);font-size:9px;letter-spacing:1.7px}.new-chat{width:100%;min-height:46px;border:1px solid #35547a;border-radius:11px;background:linear-gradient(110deg,#1d365c,#18304d);font-size:13px;font-weight:750}.new-chat b{margin-right:8px;color:var(--mint);font-size:18px}.section-label{margin:27px 7px 11px;color:#7185a4;font-size:10px;font-weight:800;letter-spacing:1.6px}.history{flex:1;min-height:0;overflow:auto}.history-empty{padding:10px 8px;color:#71819c;font-size:12px;line-height:1.8}.history-row{display:flex;align-items:center;gap:3px;margin:3px 0;padding:3px;border-radius:9px}.history-row.active{background:var(--panel2)}.history-open{flex:1;min-width:0;padding:9px 8px;border:0;background:transparent;color:#b8c5d9;text-align:left;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.history-delete{width:29px;height:29px;border:0;border-radius:7px;background:transparent;color:#8595af;font-size:17px}.history-delete:active{color:var(--red);background:#3a2636}.runtime{padding:13px;border:1px solid #293d59;border-radius:12px;background:#111c30}.runtime-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:1px}.dot{width:7px;height:7px;border-radius:50%;background:#74839b}.dot.ready{background:var(--mint);box-shadow:0 0 9px #4addbf80}.dot.loading{background:#f0c46a;animation:pulse 1s infinite}.dot.error{background:var(--red)}.model-name{margin-top:9px;font-size:12px;font-weight:750}.runtime-desc{margin-top:5px;color:var(--muted);font-size:10px;line-height:1.6;overflow-wrap:anywhere}.load-model{width:100%;min-height:35px;margin-top:11px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:#b8d9ff;font-size:11px;font-weight:700}
+.main{display:grid;grid-template-rows:64px minmax(0,1fr);min-width:0;height:100%;overflow:hidden}.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 23px;border-bottom:1px solid var(--line);background:#0c1425}.top-left{display:flex;align-items:center;gap:12px;min-width:0}.mobile-menu{display:none;width:38px;height:38px;border:1px solid var(--line);border-radius:9px;background:var(--panel);font-size:18px}.top-title{font-size:12px;font-weight:800;letter-spacing:.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.top-sub{margin-top:3px;color:var(--muted);font-size:9px}.top-right{display:flex;align-items:center;gap:9px}.badge{display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid #24554d;border-radius:20px;background:#102b2a;color:#76e5ce;font-size:9px;font-weight:800;letter-spacing:.5px}.badge i{width:6px;height:6px;border-radius:50%;background:var(--mint)}.icon-button{width:35px;height:35px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--muted);font-size:16px}.progress{position:fixed;top:64px;left:260px;right:0;z-index:30;height:2px}.progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--mint));transition:width .2s}
+.workspace{display:grid;grid-template-rows:minmax(0,1fr) auto;min-height:0;overflow:hidden;background:radial-gradient(ellipse at 55% 28%,#17294735,transparent 62%),var(--bg)}.scroll{min-height:0;padding:28px 22px 18px;overflow:auto;overscroll-behavior:contain;scroll-behavior:smooth}.messages{width:100%;max-width:850px;margin:0 auto}.welcome{max-width:660px;margin:8vh auto 25px;animation:appear .35s ease}.eyebrow{display:flex;align-items:center;gap:9px;color:var(--mint);font-size:10px;font-weight:850;letter-spacing:2px}.eyebrow:before{content:"";width:19px;height:1px;background:var(--mint)}.welcome h1{margin:17px 0 10px;font-size:clamp(28px,5vw,43px);line-height:1.35;letter-spacing:-1.3px}.welcome h1 em{color:var(--blue);font-style:normal}.welcome-desc{max-width:530px;color:var(--muted);font-size:13px;line-height:2}.prompts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:30px}.prompt-card{min-height:91px;padding:13px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(140deg,#18263e,#111c30);text-align:left}.prompt-card:active{border-color:#5c8fc0;background:#1b2e49}.prompt-icon{display:block;margin-bottom:10px;color:var(--mint);font-size:17px}.prompt-title{display:block;font-size:12px;font-weight:750}.prompt-sub{display:block;margin-top:4px;color:var(--muted);font-size:10px}
+.message{display:flex;gap:13px;margin:0 0 27px;animation:appear .2s ease}.message.user{justify-content:flex-end}.avatar{display:grid;flex:0 0 33px;place-items:center;width:33px;height:33px;border:1px solid #355779;border-radius:10px;background:linear-gradient(145deg,#1a4262,#234a72);color:var(--mint);font-size:12px;font-weight:900}.message-main{min-width:0;max-width:84%}.message.user .message-main{max-width:78%}.author{margin:2px 0 8px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:1px}.message.user .author{text-align:right}.message-text{overflow-wrap:anywhere;font-size:14px;line-height:1.9;white-space:pre-wrap}.message.user .message-text{padding:12px 16px;border:1px solid #36577d;border-radius:15px 5px 15px 15px;background:linear-gradient(140deg,#213b5e,#1c3150)}.message.assistant .message-text{color:#dce6f7}.message-text p{margin:0 0 11px}.message-text h1,.message-text h2,.message-text h3{margin:17px 0 9px;line-height:1.5}.message-text h1{font-size:22px}.message-text h2{font-size:19px}.message-text h3{font-size:16px}.message-text strong{color:#f3f8ff}.message-text em{color:#bcd5f6}.message-text ul,.message-text ol{padding-left:23px;margin:6px 0 13px}.message-text li{padding:3px 0}.message-text blockquote{margin:11px 0;padding:3px 13px;border-left:3px solid var(--mint);color:#a9c0db}.message-text code{padding:2px 5px;border:1px solid #32415b;border-radius:5px;background:#172237;color:#8ce7d5;font-family:ui-monospace,Menlo,monospace;font-size:.9em}.message-text pre{max-width:100%;margin:12px 0;padding:14px;overflow-x:auto;border:1px solid #32435d;border-radius:10px;background:#090f1d;line-height:1.65}.message-text pre code{padding:0;border:0;background:transparent;color:#b7dcff;font-size:12px;white-space:pre}.actions{display:flex;gap:7px;margin-top:9px}.action{min-height:29px;padding:4px 9px;border:1px solid transparent;border-radius:7px;background:transparent;color:#8293ad;font-size:10px}.action:active{border-color:var(--line);background:var(--panel)}.typing{display:inline-flex;gap:5px;padding:13px 0}.typing i{width:6px;height:6px;border-radius:50%;background:var(--mint);animation:typing 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+.composer-area{padding:9px 20px max(14px,env(safe-area-inset-bottom));background:linear-gradient(0deg,var(--bg) 80%,transparent)}.composer{width:100%;max-width:850px;margin:0 auto;padding:11px 13px 9px;border:1px solid #344765;border-radius:16px;background:#141f34;box-shadow:0 10px 35px #0002}.composer:focus-within{border-color:#588cbd;box-shadow:0 0 0 3px #4a94df12}#promptInput{display:block;width:100%;min-height:43px;max-height:170px;padding:7px 4px;border:0;outline:0;resize:none;overflow-y:auto;background:transparent;color:white;font-size:16px;line-height:1.7}#promptInput::placeholder{color:#70819e}.composer-bottom{display:flex;align-items:center;justify-content:space-between;gap:9px;padding-top:8px;border-top:1px solid #293851}.hint{color:#71829c;font-size:10px}.controls{display:flex;align-items:center;gap:9px}.token-label{color:#71829c;font-size:9px}.send,.stop{display:flex;align-items:center;justify-content:center;gap:7px;min-width:85px;min-height:38px;padding:7px 12px;border:0;border-radius:9px;background:linear-gradient(120deg,#397de0,#3371cb);color:white;font-size:12px;font-weight:800}.stop{background:#512b3b;color:#ffc3cb}.send[hidden],.stop[hidden]{display:none}.disclaimer{max-width:850px;margin:8px auto 0;color:#657590;font-size:9px;text-align:center;line-height:1.6}.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom));z-index:100;max-width:calc(100vw - 28px);padding:11px 16px;border:1px solid #3a526f;border-radius:10px;background:#1c2a40;color:white;font-size:12px;box-shadow:0 8px 30px #0006;opacity:0;pointer-events:none;transform:translate(-50%,10px);transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}.overlay{display:none}.spinner{width:13px;height:13px;border:2px solid #ffffff50;border-top-color:white;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{opacity:.35}}@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}@keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.app{display:block}.sidebar{position:fixed;top:0;bottom:0;left:0;width:min(300px,86vw);padding-top:max(18px,env(safe-area-inset-top));transform:translateX(-105%);transition:transform .23s;box-shadow:15px 0 50px #0006}.sidebar.open{transform:translateX(0)}.overlay.active{display:block;position:fixed;inset:0;z-index:15;background:#0009}.main{height:100dvh;grid-template-rows:58px minmax(0,1fr)}.topbar{height:58px;padding:0 12px}.mobile-menu{display:block}.top-title{font-size:11px}.top-sub{font-size:9px}.badge{padding:6px 8px;font-size:8px}.icon-button{width:33px;height:33px}.progress{top:58px;left:0}.scroll{padding:22px 14px 15px}.welcome{margin:6vh auto 20px}.welcome h1{font-size:29px}.welcome-desc{font-size:12px}.prompts{gap:8px;margin-top:24px}.prompt-card{min-height:88px;padding:11px}.prompt-title{font-size:11px}.prompt-sub{font-size:9px}.message{gap:9px;margin-bottom:22px}.avatar{flex-basis:29px;width:29px;height:29px}.message-main{max-width:89%}.message.user .message-main{max-width:86%}.message-text{font-size:13px}.composer-area{padding:7px 10px max(10px,env(safe-area-inset-bottom))}.composer{padding:9px 10px 8px;border-radius:14px}.hint{font-size:9px}.send,.stop{min-width:76px;min-height:37px;font-size:11px}.disclaimer{font-size:8px}}
+@media(max-width:365px){.badge{display:none}.prompts{grid-template-columns:1fr}.prompt-card{min-height:72px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="logo"><i></i><i></i><i></i><i></i></div><div><div class="brand-name">LUMEN</div><div class="brand-sub">LOCAL INTELLIGENCE</div></div></div>
+    <button class="new-chat" id="newChat"><b>＋</b>新しい会話</button>
+    <div class="section-label">YOUR WORKSPACE</div>
+    <div class="history" id="history"><div class="history-empty">まだ会話はありません。<br>新しい会話を始めましょう。</div></div>
+    <div class="runtime">
+      <div class="runtime-top"><span>LOCAL ENGINE</span><span class="dot" id="runtimeDot"></span></div>
+      <div class="model-name">Qwen 2.5 · 0.5B</div>
+      <div class="runtime-desc" id="runtimeDesc">AIモデル未ロード</div>
+      <button class="load-model" id="loadModel">AIモデルを起動</button>
+    </div>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left"><button class="mobile-menu" id="menu" aria-label="メニュー">☰</button><div><div class="top-title" id="chatTitle">NEW CONVERSATION</div><div class="top-sub">LUMEN AI WORKSPACE</div></div></div>
+      <div class="top-right"><div class="badge"><i></i>ON-DEVICE AI</div><button class="icon-button" id="clear" aria-label="会話を削除" title="現在の会話を削除">↺</button></div>
+    </header>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <section class="workspace">
+      <div class="scroll" id="scroll"><div class="messages" id="messages">
+        <section class="welcome" id="welcome">
+          <div class="eyebrow">PERSONAL AI / LOCAL INFERENCE</div>
+          <h1>こんにちは。<br><em>何を始めますか？</em></h1>
+          <p class="welcome-desc">LUMENは端末上で動作するAIアシスタントです。質問、文章作成、プログラミング、アイデア整理などを手伝います。</p>
+          <div class="prompts">
+            <button class="prompt-card" data-prompt="今日やるべきことを整理して、優先順位をつけてください。"><span class="prompt-icon">◈</span><span class="prompt-title">タスクを整理する</span><span class="prompt-sub">計画・スケジュール・優先順位</span></button>
+            <button class="prompt-card" data-prompt="次のテーマについて、初心者にもわかるように解説してください。"><span class="prompt-icon">⌘</span><span class="prompt-title">詳しく解説する</span><span class="prompt-sub">勉強・技術・知識の理解</span></button>
+            <button class="prompt-card" data-prompt="以下の条件から、実用的なアイデアを10個考えてください。"><span class="prompt-icon">✳</span><span class="prompt-title">アイデアを考える</span><span class="prompt-sub">企画・発想・ブレインストーミング</span></button>
+            <button class="prompt-card" data-prompt="次のコードを読み、処理の流れと改善点を説明してください。"><span class="prompt-icon">⌥</span><span class="prompt-title">コードを解説する</span><span class="prompt-sub">Python・JavaScript・Android</span></button>
+          </div>
+        </section>
+      </div></div>
+      <div class="composer-area">
+        <div class="composer">
+          <textarea id="promptInput" rows="1" maxlength="6000" placeholder="LUMENにメッセージを送信..." enterkeyhint="send" spellcheck="false"></textarea>
+          <div class="composer-bottom"><span class="hint">Enterで送信 · Shift + Enterで改行</span><div class="controls"><span class="token-label">LOCAL / Q4</span><button class="send" id="send"><span>↑</span>送信</button><button class="stop" id="stop" hidden>■ 停止</button></div></div>
+        </div>
+        <div class="disclaimer">初回起動時はCDNからライブラリとモデルを取得します。入力内容と推論は端末内で処理されます。</div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module">
+const MODEL_ID = "Qwen2.5-0.5B-Instruct-q4f16_1-MLC";
+const WEBLLM_URL = "https://esm.run/@mlc-ai/web-llm@0.2.87";
+const STORAGE_KEY = "lumen_chats_fixed_v2";
+const MAX_CHATS = 20;
+const MAX_MESSAGES = 30;
+const MAX_CONTEXT_MESSAGES = 8;
+const MAX_CONTEXT_CHARS = 1400;
+const MAX_OUTPUT_TOKENS = 512;
+const SYSTEM_PROMPT = "あなたはLUMENというAIアシスタントです。原則として日本語で、自然で正確に回答してください。必要に応じて見出し、箇条書き、コード例を使ってください。不確実な情報は断定せず、Web検索や外部操作ができると偽らないでください。ユーザーの質問に直接答え、簡潔さと分かりやすさを重視してください。";
+const $ = id => document.getElementById(id);
+const el = {
+  sidebar:$('sidebar'),overlay:$('overlay'),history:$('history'),messages:$('messages'),welcome:$('welcome'),scroll:$('scroll'),
+  title:$('chatTitle'),input:$('promptInput'),send:$('send'),stop:$('stop'),load:$('loadModel'),dot:$('runtimeDot'),desc:$('runtimeDesc'),
+  progress:$('progressBar'),toast:$('toast')
+};
+let engine = null;
+let loadPromise = null;
+let chats = [];
+let activeChatId = null;
+let busy = false;
+let generating = false;
+let stopRequested = false;
+let toastTimer = 0;
+let pendingUserMessage = null;
+let pendingAssistantMessage = null;
+
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function toast(text){el.toast.textContent=text;el.toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.toast.classList.remove('show'),2500)}
+function setStatus(state,text){el.dot.className='dot'+(state==='ready'?' ready':state==='loading'?' loading':state==='error'?' error':'');el.desc.textContent=text;el.load.disabled=state==='ready'||state==='loading';el.load.textContent=state==='ready'?'AIモデル起動済み':state==='loading'?'読み込み中...':state==='error'?'再試行':'AIモデルを起動'}
+function setProgress(value){el.progress.style.width=Math.max(0,Math.min(100,Number(value)||0))+'%'}
+function setBusy(value){busy=value;updateControls()}
+function updateControls(){el.send.disabled=busy&&!generating;el.input.disabled=busy;el.send.hidden=generating;el.stop.hidden=!generating;el.send.innerHTML=busy&&!generating?'<span class="spinner"></span>準備中':'<span>↑</span>送信'}
+function scrollBottom(){el.scroll.scrollTop=el.scroll.scrollHeight}
+function nearBottom(){return el.scroll.scrollHeight-el.scroll.scrollTop-el.scroll.clientHeight<150}
+function activeChat(){return chats.find(c=>c.id===activeChatId)||null}
+
+async function checkGPU(){
+  if(!window.isSecureContext)throw new Error('安全なブラウザ環境ではありません。HTTPSまたはlocalhostから開いてください。');
+  if(!navigator.gpu)throw new Error('このSafariではWebGPUが利用できません。iOS/SafariのバージョンとWebGPU対応状況を確認してください。');
+  const adapter=await navigator.gpu.requestAdapter();
+  if(!adapter)throw new Error('GPUアダプターを取得できませんでした。');
+  return adapter;
+}
+async function loadModel(){
+  if(engine)return engine;
+  if(loadPromise)return loadPromise;
+  loadPromise=(async()=>{
+    try{
+      setStatus('loading','WebGPUを確認しています...');setProgress(2);
+      await checkGPU();
+      setStatus('loading','WebLLMライブラリを読み込んでいます...');setProgress(4);
+      const webllm=await import(WEBLLM_URL);
+      const modelRecord=webllm.prebuiltAppConfig?.model_list?.find(m=>m.model_id===MODEL_ID);
+      if(!modelRecord)throw new Error('このWebLLMバージョンの事前定義モデル一覧に対象モデルがありません。モデルIDまたはライブラリのバージョンを確認してください。');
+      // Reduce KV-cache allocation for mobile devices while retaining the requested model.
+      const appConfig={...webllm.prebuiltAppConfig,model_list:webllm.prebuiltAppConfig.model_list.map(m=>m.model_id===MODEL_ID?{...m,overrides:{...(m.overrides||{}),context_window_size:2048}}:m)};
+      setStatus('loading','Qwen2.5モデルを取得・初期化しています...');
+      engine=await webllm.CreateMLCEngine(MODEL_ID,{
+        appConfig,
+        initProgressCallback:(p)=>{
+          const pct=typeof p?.progress==='number'?p.progress*100:5;
+          setProgress(Math.max(4,pct));
+          if(p?.text)setStatus('loading',p.text);
+        }
+      });
+      setProgress(100);setStatus('ready','Qwen2.5 · WebGPU · 準備完了');toast('AIモデルの準備が完了しました');
+      return engine;
+    }catch(err){engine=null;setProgress(0);setStatus('error',err?.message||String(err));throw err;}
+  })();
+  try{return await loadPromise;}finally{loadPromise=null;}
+}
+async function warmup(){if(busy||engine)return;setBusy(true);try{await loadModel();}catch(e){console.error(e);toast('モデルの起動に失敗しました。状態欄を確認してください。');}finally{setBusy(false);}}
+
+function loadSaved(){try{const raw=localStorage.getItem(STORAGE_KEY);const parsed=raw?JSON.parse(raw):[];if(!Array.isArray(parsed))return[];return parsed.filter(c=>c&&typeof c.id==='string'&&Array.isArray(c.messages)).slice(0,MAX_CHATS);}catch(e){console.warn('History read error',e);return[]}}
+function save(){try{chats.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));chats=chats.slice(0,MAX_CHATS);localStorage.setItem(STORAGE_KEY,JSON.stringify(chats));}catch(e){console.warn('History write error',e);toast('履歴を保存できません。Safariの空き容量を確認してください。')}}
+function createChat(){const c={id:id(),title:'新しい会話',createdAt:Date.now(),updatedAt:Date.now(),messages:[]};chats.unshift(c);activeChatId=c.id;return c}
+function getOrCreate(){return activeChat()||createChat()}
+function newChat(){if(busy)return;activeChatId=null;render();renderHistory();closeSidebar();el.input.focus()}
+function selectChat(chatId){if(busy)return;const c=chats.find(x=>x.id===chatId);if(!c)return;activeChatId=chatId;render();renderHistory();closeSidebar()}
+function deleteChat(chatId){if(busy)return;if(!confirm('この会話を削除しますか？'))return;chats=chats.filter(c=>c.id!==chatId);if(activeChatId===chatId)activeChatId=null;save();render();renderHistory();toast('会話を削除しました')}
+function clearChat(){const c=activeChat();if(!c){toast('削除する会話がありません');return}deleteChat(c.id)}
+function renderHistory(){el.history.replaceChildren();if(!chats.length){const d=document.createElement('div');d.className='history-empty';d.textContent='まだ会話はありません。新しい会話を始めましょう。';el.history.append(d);return}for(const c of [...chats].sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0))){const row=document.createElement('div');row.className='history-row'+(c.id===activeChatId?' active':'');const open=document.createElement('button');open.className='history-open';open.textContent=c.title||'新しい会話';open.addEventListener('click',()=>selectChat(c.id));const del=document.createElement('button');del.className='history-delete';del.textContent='×';del.title='削除';del.setAttribute('aria-label','会話を削除');del.addEventListener('click',()=>deleteChat(c.id));row.append(open,del);el.history.append(row)}}
+
+function inlineMarkdown(parent,text){const re=/(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g;let pos=0,m;while((m=re.exec(text))){if(m.index>pos)parent.append(document.createTextNode(text.slice(pos,m.index)));const t=m[0],tag=t.startsWith('`')?'code':t.startsWith('**')?'strong':'em';const n=document.createElement(tag);n.textContent=t.slice(tag==='strong'?2:1,tag==='strong'?-2:-1);parent.append(n);pos=re.lastIndex}if(pos<text.length)parent.append(document.createTextNode(text.slice(pos)))}
+function blocks(parent,text){const lines=text.split('\n');let i=0;while(i<lines.length){const line=lines[i];if(!line.trim()){i++;continue}const h=line.match(/^(#{1,3})\s+(.+)$/);if(h){const n=document.createElement('h'+h[1].length);inlineMarkdown(n,h[2]);parent.append(n);i++;continue}if(/^\s*[-*]\s+/.test(line)||/^\s*\d+\.\s+/.test(line)){const ordered=/^\s*\d+\.\s+/.test(line),list=document.createElement(ordered?'ol':'ul'),re=ordered?/^\s*\d+\.\s+/:/^\s*[-*]\s+/;while(i<lines.length&&re.test(lines[i])){const li=document.createElement('li');inlineMarkdown(li,lines[i].replace(re,''));list.append(li);i++}parent.append(list);continue}if(/^\s*>/.test(line)){const q=document.createElement('blockquote'),parts=[];while(i<lines.length&&/^\s*>/.test(lines[i]))parts.push(lines[i++].replace(/^\s*>\s?/,''));inlineMarkdown(q,parts.join(' '));parent.append(q);continue}const p=document.createElement('p'),parts=[];while(i<lines.length&&lines[i].trim()&&!/^(#{1,3})\s+/.test(lines[i])&&!/^\s*[-*]\s+/.test(lines[i])&&!/^\s*\d+\.\s+/.test(lines[i])&&!/^\s*>/.test(lines[i]))parts.push(lines[i++]);parts.forEach((s,j)=>{inlineMarkdown(p,s);if(j<parts.length-1)p.append(document.createElement('br'))});parent.append(p)}}
+function renderMarkdown(node,text){node.replaceChildren();const re=/```([\w-]*)\n([\s\S]*?)```/g;let pos=0,m;while((m=re.exec(text))){const before=text.slice(pos,m.index);if(before.trim())blocks(node,before);const pre=document.createElement('pre'),code=document.createElement('code');code.textContent=m[2];if(m[1])code.dataset.language=m[1];pre.append(code);node.append(pre);pos=re.lastIndex}const rest=text.slice(pos);if(rest.trim())blocks(node,rest)}
+function messageNode(msg){const wrap=document.createElement('article');wrap.className='message '+msg.role;const main=document.createElement('div');main.className='message-main';const author=document.createElement('div');author.className='author';const body=document.createElement('div');body.className='message-text';if(msg.role==='user'){author.textContent='YOU';body.textContent=msg.content;main.append(author,body);wrap.append(main)}else{const avatar=document.createElement('div');avatar.className='avatar';avatar.textContent='L';author.textContent='LUMEN';renderMarkdown(body,msg.content||'');const actions=document.createElement('div');actions.className='actions';const cp=document.createElement('button');cp.className='action';cp.textContent='▢ コピー';cp.addEventListener('click',()=>copyText(msg.content||''));actions.append(cp);main.append(author,body,actions);wrap.append(avatar,main)}return wrap}
+function render(){const c=activeChat(),list=c?.messages||[];el.messages.replaceChildren();if(!list.length){el.messages.append(el.welcome);el.welcome.hidden=false;}else{el.welcome.hidden=true;for(const m of list)el.messages.append(messageNode(m));}el.title.textContent=c?.title?.toUpperCase()||'NEW CONVERSATION';scrollBottom()}
+async function copyText(text){if(!text)return;try{await navigator.clipboard.writeText(text);toast('コピーしました')}catch(e){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();try{document.execCommand('copy');toast('コピーしました')}catch{toast('コピーできませんでした')}ta.remove()}}
+
+function getContext(chat){let src=chat.messages.filter(m=>(m.role==='user'||m.role==='assistant')&&String(m.content||'').trim()).slice(-MAX_CONTEXT_MESSAGES);let remaining=MAX_CONTEXT_CHARS;const clipped=[];for(let i=src.length-1;i>=0;i--){let content=String(src[i].content||'');if(!remaining)break;if(content.length>remaining)content=content.slice(-remaining);clipped.unshift({role:src[i].role,content});remaining-=content.length;if(remaining<=0)break;}return[{role:'system',content:SYSTEM_PROMPT},...clipped]}
+async function sendMessage(){if(busy)return;const text=el.input.value.trim();if(!text)return;busy=true;generating=false;stopRequested=false;setBusy(true);const chat=getOrCreate();pendingUserMessage={role:'user',content:text};chat.messages.push(pendingUserMessage);if(chat.messages.filter(m=>m.role==='user').length===1)chat.title=text.replace(/\s+/g,' ').slice(0,28);if(chat.messages.length>MAX_MESSAGES)chat.messages=chat.messages.slice(-MAX_MESSAGES);chat.updatedAt=Date.now();el.input.value='';resizeInput();save();renderHistory();render();closeSidebar();
+  let assistant=null;
+  try{
+    if(!engine){toast('初回モデル読み込みを開始します');await loadModel();}
+    if(stopRequested)return;
+    assistant={role:'assistant',content:''};pendingAssistantMessage=assistant;chat.messages.push(assistant);if(chat.messages.length>MAX_MESSAGES)chat.messages=chat.messages.slice(-MAX_MESSAGES);render();
+    const body=el.messages.querySelector('.message.assistant:last-child .message-text');
+    generating=true;updateControls();setStatus('ready','回答を生成しています...');
+    const stream=await engine.chat.completions.create({messages:getContext(chat),temperature:0.65,top_p:0.9,repetition_penalty:1.05,max_tokens:MAX_OUTPUT_TOKENS,stream:true});
+    for await(const chunk of stream){if(stopRequested)break;const part=chunk.choices?.[0]?.delta?.content||'';if(part){assistant.content+=part;const shouldScroll=nearBottom();body.textContent=assistant.content;if(shouldScroll)scrollBottom();}}
+    if(!assistant.content.trim()){if(stopRequested){chat.messages=chat.messages.filter(m=>m!==assistant);}else{assistant.content='応答を生成できませんでした。もう一度お試しください。';}}
+    render();chat.updatedAt=Date.now();save();renderHistory();
+    setStatus('ready',stopRequested?'生成を停止しました':'Qwen2.5 · WebGPU · 準備完了');
+  }catch(err){console.error('LUMEN error:',err);if(assistant&&!assistant.content)chat.messages=chat.messages.filter(m=>m!==assistant);if((!assistant||!assistant.content)&&pendingUserMessage&&chat.messages.includes(pendingUserMessage)){chat.messages=chat.messages.filter(m=>m!==pendingUserMessage);el.input.value=text;resizeInput();}save();render();renderHistory();if(!engine)setStatus('error',err?.message||String(err));else setStatus('ready','生成エラー: '+(err?.message||String(err)).slice(0,110));toast('エラーが発生しました。モデル状態欄を確認してください。');
+  }finally{busy=false;generating=false;stopRequested=false;pendingUserMessage=null;pendingAssistantMessage=null;setBusy(false);if(engine&&el.desc.textContent==='回答を生成しています...')setStatus('ready','Qwen2.5 · WebGPU · 準備完了');scrollBottom();}}
+function stopGeneration(){if(!generating||!engine)return;stopRequested=true;setStatus('ready','生成を停止しています...');try{const result=engine.interruptGenerate();if(result?.catch)result.catch(console.warn);}catch(e){console.warn('interruptGenerate failed',e)}}
+function resizeInput(){el.input.style.height='auto';el.input.style.height=Math.min(el.input.scrollHeight,170)+'px'}
+function openSidebar(){el.sidebar.classList.add('open');el.overlay.classList.add('active')}
+function closeSidebar(){el.sidebar.classList.remove('open');el.overlay.classList.remove('active')}
+
+el.input.addEventListener('input',resizeInput);
+el.input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();sendMessage()}});
+el.send.addEventListener('click',sendMessage);
+el.stop.addEventListener('click',stopGeneration);
+el.load.addEventListener('click',warmup);
+$('newChat').addEventListener('click',newChat);
+$('clear').addEventListener('click',clearChat);
+$('menu').addEventListener('click',openSidebar);
+el.overlay.addEventListener('click',closeSidebar);
+document.querySelectorAll('[data-prompt]').forEach(b=>b.addEventListener('click',()=>{if(busy)return;el.input.value=b.dataset.prompt;resizeInput();el.input.focus()}));
+
+function initialize(){chats=loadSaved();activeChatId=chats[0]?.id||null;renderHistory();render();setStatus('idle','AIモデル未ロード');if(!navigator.gpu)setStatus('error','WebGPU非対応ブラウザ');}
+initialize();
+</script>
+</body>
+</html>
